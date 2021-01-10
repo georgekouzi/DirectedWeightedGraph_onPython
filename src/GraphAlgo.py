@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as print_graph
 import random
 import math
-
+from src.Node import Node
 
 class GraphAlgo(GraphAlgoInterface):
 
@@ -36,13 +36,14 @@ class GraphAlgo(GraphAlgoInterface):
 
                 self.__DWGraph = DiGraph()
                 DataGraph = json.load(JsonFile)
+
                 if 'Nodes' not in DataGraph or DataGraph["Nodes"] is None or DataGraph["Nodes"] is {}:
                     return False
 
                 for node in DataGraph.get("Nodes"):
                     if "pos" in node:
                         pos = node.get("pos").split(",")
-                        self.__DWGraph.add_node(node.get("id"), (float(pos[0]), float(pos[1]), float(pos[2])))
+                        self.__DWGraph.add_node(node.get("id"),(float(pos[0]), float(pos[1]), float(pos[2])))
                     else:
                         self.__DWGraph.add_node(node.get("id"))
                 if "Edges" in DataGraph:
@@ -68,13 +69,13 @@ class GraphAlgo(GraphAlgoInterface):
                 new_graph = {"Nodes": [], "Edges": []}
                 for node in all_node:
 
-                    if all_node[node]["pos"] is None:
+                    if all_node[node].get_pos() is None:
                         new_graph["Nodes"].append({"id": node})
                     else:
                         new_graph["Nodes"].append({"id": node,
-                                                   "pos": str(all_node[node]["pos"][0]) + "," + str(
-                                                       all_node[node]["pos"][1]) + "," + str(
-                                                       all_node[node]["pos"][2])})
+                                                   "pos": str(all_node[node].get_pos()[0]) + "," + str(
+                                                       all_node[node].get_pos()[1]) + "," + str(
+                                                       all_node[node].get_pos()[2])})
 
                     allEdge = self.__DWGraph.all_out_edges_of_node(node)
                     if allEdge is not None:
@@ -212,16 +213,24 @@ class GraphAlgo(GraphAlgoInterface):
     def plot_graph(self) -> None:
 
         nodes = self.__DWGraph.get_all_v()
+        # print(len(nodes))
+        # random_pos={"x":{},"y":{}}
+        b = random.uniform(0, len(nodes))
+
+        # print(b)
         for key in nodes:
 
-            if nodes[key]["pos"] is None:
-                x_pos = random.uniform(0, len(nodes))  # nodes[key][0]
-                y_pos = random.uniform(0, len(nodes))  # nodes[key][1]
-                nodes[key]["pos"] = (x_pos, y_pos, 0.0)
+            if nodes[key].get_pos() is None:
+                x_pos = random.uniform(0, len(nodes))
+                # if int(x_pos) in  random_pos:
+                #     random_pos.get("x").update({})
+
+                y_pos = random.uniform(0, len(nodes))
+                nodes[key].set_pos( (x_pos, y_pos, 0.0))
 
             else:
-                x_pos = nodes[key]["pos"][0]
-                y_pos = nodes[key]["pos"][1]
+                x_pos = nodes[key].get_pos()[0]
+                y_pos = nodes[key].get_pos()[1]
 
             edge = self.__DWGraph.all_out_edges_of_node(key)
 
@@ -232,14 +241,14 @@ class GraphAlgo(GraphAlgoInterface):
 
                 for neighbor in edge:
 
-                    if nodes[neighbor]["pos"] is None:
+                    if nodes[neighbor].get_pos() is None:
                         x_neighbor_pos = random.uniform(0, len(nodes))
                         y_neighbor_pos = random.uniform(0, len(nodes))
-                        nodes[neighbor]["pos"] = (x_neighbor_pos, y_neighbor_pos, 0.0)
+                        nodes[neighbor].set_pos ((x_neighbor_pos, y_neighbor_pos, 0.0))
 
                     else:
-                        x_neighbor_pos = nodes[neighbor]["pos"][0]
-                        y_neighbor_pos = nodes[neighbor]["pos"][1]
+                        x_neighbor_pos = nodes[neighbor].get_pos()[0]
+                        y_neighbor_pos = nodes[neighbor].get_pos()[1]
 
                     print_graph.plot([x_pos, x_neighbor_pos], [y_pos, y_neighbor_pos], zorder=0, color='k')
 
@@ -314,168 +323,3 @@ class GraphAlgo(GraphAlgoInterface):
         return tarjan_dict
 
 
-# graph1=DiGraph()
-# print(graph1.add_node(1,(1.23,1.34)))
-# print(graph1.add_node(2,(1.23,1.34)))
-# print(graph1.add_node(3,(1.23,1.34)))
-# graphAlgo=GraphAlgo(graph1)
-# # print(graphAlgo.load_from_json('A5'))
-# print(graphAlgo.get_graph())
-# # print(graphAlgo.save_to_json('kaka.txt'))
-# # print(graphAlgo.load_from_json("A5"))
-# # print(graphAlgo.get_graph())
-# # print(graphAlgo.load_from_json("lama.txt"))
-# node={1:{"dist":20,"vis":True,},2:{"dist":3,"vis":False}}
-# # node.update({1:{"dist":20,"vis":True,},2:{"dist":3,"vis":False}})
-# print(node.get(1))
-# pQueue = PriorityQueue()
-# NodeData={1:{"dist":0.0,"vis":True}}
-# print(NodeData.get(1))
-# NodeData.get(1).update({"dist":2222.32})
-# print(NodeData.get(1))
-# pQueue.put((43.2111,23))
-# pQueue.put((3.11,22))
-# pQueue.put((0.2,24))
-# pQueue.put((0.3,25))
-# while not pQueue.empty():
-#
-#     print(pQueue.get()[1])
-# print(float(sys.maxsize))
-# g = DiGraph()
-# g.add_node(1)
-# g.add_node(2)
-# g.add_node(3)
-# g.add_node(4)
-# g.add_node(5)
-# g.add_node(6)
-# g.add_edge(1, 3, 9)
-# g.add_edge(1, 2, 3.45)
-# g.add_edge(1, 6, 14)
-# g.add_edge(2, 3, 10)
-# g.add_edge(2, 4, 2.34322)
-# g.add_edge(3, 6, 2)
-# g.add_edge(3, 4, 11)
-# g.add_edge(4, 5, 6)
-# g.add_edge(6, 5, 9)
-# g.add_edge(5, 3, 2.1211)
-# g.add_edge(4, 2, 2.34322)
-# g.add_edge(2, 1, 3.45)
-# algo = GraphAlgo(g)
-# print(algo.get_graph())
-# print(algo.shortest_path(1, 5))
-# print(algo.connected_components())
-# g = DiGraph()
-# g.add_node(0)
-# g.add_node(1)
-# g.add_node(2)
-# g.add_edge(2, 0, 0)
-# g.add_edge(2, 1, 0)
-# g.add_edge(0, 1, 0)
-# g.add_edge(1, 0, 0)
-# algo = GraphAlgo(g)
-# print(algo.connected_components())
-# print(algo.connected_component(0))
-# print(algo.load_from_json("A5"))
-# print(algo.connected_components())
-g = DiGraph()
-g.add_node(0)
-g.add_node(1)
-g.add_node(2)
-g.add_node(3)
-g.add_node(4)
-g.add_node(5)
-
-g.add_edge(0, 1, 0)
-g.add_edge(1, 2, 0)
-g.add_edge(2, 3, 0)
-# g.add_edge(3, 0, 0)
-g.add_edge(3, 4, 0)
-g.add_edge(4, 3, 0)
-algo = GraphAlgo(g)
-# print(algo.connected_components())
-# print(algo.connected_component(6))
-# algo.plot_graph()
-# algo.load_from_json("T0.json_saved")
-# print(algo.get_graph())
-# algo.plot_graph()
-# a = np.linspace(-2,2, 100)
-# print(a)
-# # print_graph.plot(a, a**2)
-# print_graph.annotate("here", xy=(0, 0), xytext=(0, 2), arrowprops=dict(arrowstyle="->"))
-# print_graph.show()
-# x=[0,3,8,7,5,3,2,1]
-# y=[0,1,3,5,9,8,7,5]
-# print("x = ",[0,3,8,7,5,3,2,1])
-# print("y = ",[0,1,3,5,9,8,7,5])
-# print("a[i+1]-a[i]")
-
-# u = np.diff(x)
-# v = np.diff(y)
-# print("u = np.diff(x)=",u)
-# print("v = np.diff(y) = ",v)
-#
-# pos_x = x[:-1] + u*0.9
-# print("x[:-1]= ",x[:-1],"u/2= ",u/2)
-# pos_y = y[:-1] + v*0.9
-# print("y[:-1]= ",y[:-1],"v/2= ",v/2)
-# print("pos_x = x[:-1] + u/2=",pos_x)
-# print("pos_y = y[:-1] + v/2 = " ,pos_y)
-# norm = np.sqrt(u**2+v**2)
-# print("norm = np.sqrt(u**2+v**2) = ",norm)
-
-# fig, ax = print_graph.subplots()
-# print_graph.plot(x,y,marker="o")
-# print_graph.quiver(pos_x, pos_y, u, v, angles="xy", zorder=5, pivot="mid")
-# print_graph.show()
-
-# algo.load_from_json('A5')
-# algo.plot_graph()
-# nodes=algo.get_graph().get_all_v()
-# print(nodes)
-# nodes.values()
-# x=[]
-# y=[]
-# for key in nodes:
-#     x_pos=nodes[key][0]
-#     y_pos=nodes[key][1]
-#     x.append(x_pos)
-#     y.append(y_pos)
-#     print_graph.scatter(x_pos,y_pos,color='r')
-#     print_graph.text(x_pos+0.0001,y_pos+0.0001,str(key),color='g',zorder=100)
-# # print(x_pos)
-# # print(y_pos)
-#     edge=algo.get_graph().all_out_edges_of_node(key)
-#     for neighbor in edge:
-#         x_neighbor_pos=nodes[neighbor][0]
-#         y_neighbor_pos=nodes[neighbor][1]
-#         x.append(x_neighbor_pos)
-#         y.append(y_neighbor_pos)
-#         # print_graph.scatter([x_pos,x_neighbor_pos],[y_pos,y_neighbor_pos],color='r')
-# u = np.diff(x)
-# v = np.diff(y)
-# arrow_x = x[:-1]+u*0.8
-# arrow_y = y[:-1]+v*0.8
-#
-# # fig, ax = print_graph.subplots()
-# # print_graph.scatter(x,y,color='r')
-# print_graph.plot(x,y,color='k')
-# print_graph.quiver(arrow_x,arrow_y, u, v, angles="xy", zorder=5, pivot="mid",color='k')
-# # ax.show()
-#
-# #
-# #
-# #
-# #
-# # print_graph.show()
-# g = DiGraph()
-# g.add_node(1)
-# g.add_node(2)
-# g.add_node(3)
-# g.add_edge(1, 3, 0)
-#
-# algo = GraphAlgo(g)
-# algo.plot_graph()
-
-# st = [4]
-# print(st[len(st) - 1])
-# print(None)

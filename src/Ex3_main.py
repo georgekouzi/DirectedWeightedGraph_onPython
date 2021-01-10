@@ -1,5 +1,6 @@
-from DiGraph import DiGraph
-from GraphAlgo import GraphAlgo
+
+from src.DiGraph import DiGraph
+from src.GraphAlgo import GraphAlgo
 
 
 def check():
@@ -48,6 +49,7 @@ def check0():
     g_algo.plot_graph()
 
 
+
 def check1():
     """
        This function tests the naming (main methods of the GraphAlgo class, as defined in GraphAlgoInterface.
@@ -83,7 +85,6 @@ def check2():
     print(g_algo.connected_component(0))
     print(g_algo.connected_components())
     g_algo.plot_graph()
-
 
 if __name__ == '__main__':
     check()
