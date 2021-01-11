@@ -48,6 +48,52 @@ If this node does not exist the function will return false.
 ----------------------------------------------------------------
 10) __remove_edge(self, node_id1: int, node_id2: int) -> bool -__ -This function gets two keys, a source node_id1 and a destination node_id2, the function checks if this edge exists and deletes this edge and returns true. If the edge does not exist the function returns false.
 
+
+## The functions in the GraphAlgo class and the description about them :
+
+1) __get_graph(self) -> GraphInterface -__  This function return your graph.
+---------------------
+
+2) __load_from_json(self, file_name: str) -> bool -__ Load this json file (directed weighted graph). This function path of json file name on the computer. The default path to this file is in the project folder. we use json lib- Which allows us to extract the information from the json file that we need and read it and create a new graph . and its data can be used to recreate the object in memory. The information we want to load is: a dictionary of list of all edges and list of all nodes. the run time is: O(E*V)- E - edges and V-nodes. we use gson jar to get json file load.
+
+--------------------------------------------------------
+3) __save_to_json(self, file_name: str) -> bool -__  Saves this directed weighted graph to this json file name(file_name:str). This function path of json file name on the computer. The default path to this file is in the project folder(src). we use json lib- Which allows us to extract the information we need and write it into the json file. The information we want to keep is: dictionary of list of all the edges and list of all the nodes. 
+the run time is: O(E*V)- E - edges and V-nodes. if the save succdicessfully the function return true else return false.
+--------------------------------------------------------
+4) __shortest_path(self, id1: int, id2: int) -> (float, list) -___ returns tuple of the length of the shortest path between src to dest and the shortest pat list between src to dest - as an ordered List of nodes: source--> n1-->n2-->...destination. 
+In order to find the shortest path from source node to destination node we will use the algorithm of dijkstra.. if src==dest we return (inf, [id1])
+or if no path between the node -->  we return (inf, None).
+
+----------------------------------------
+5) ___dijkstra(self, id_src) ->dict -__ This algorithm makes it possible to go over a weighted directed graph And find the cheapest ways from the source node to the rest of the graph nodes. The weights in the graph symbolize distance. The shortest route between two points means the route with the lowest amount of weights between the two vertices. we use inner class that call nodeAlgo to save all the data that dijkstra algorithm need. Ran time- O(E*log(V)) because we create PriorityQueue and compare the node by the minimum distance .
+................................................
+6) __connected_component(self, id1: int) -> list -__ This function checks if there is a Circular  Path from node id1 node to all the nodes With Dfs Algorithm- this is an improved DFS called Tarjan Algorithm. after use DFS Algorithm we get list of list of all the phath in this component. Tarjan_Algo dictionary - serves data Structure: stack ,lowlink ,count and st_trace. 
+run time O(E + V): E- the number of ribs, V- the number of nodes.
+------------------------------------------------------------
+7) __connected_components(self) -> List[list]-__ This function checks if there is a Path from each node to all the nodes With Dfs Algorithm- this is an improved DFS called Tarjan Algorithm. after use DFS Algorithm we get list of list of all the phath in this component  if the size of the list equal to 1 So the graph is strongly connected and can be reached from any node to any other node. Tarjan_Algo dictionary - serves data Structure: stack ,lowlink ,count and st_trace. 
+run time O(E + V): E- the number of ribs, V- the number of nodes.
+-------------------------------------------------
+8) __dfs(self, n, tarjan_dict) -> dict -__ his algorithm makes it possible to go over a weighted directed graph the node stack, which starts out empty and stores the history of nodes explored but not yet committed to a strongly connected component. as nodes are not popped as the search returns up the tree; they are only popped when an entire strongly connected component has been found. The outermost loop searches each node that has not yet been visited, ensuring that nodes which are not reachable from the first node are still eventually traversed. finding all successors from the node v, and reporting all strongly connected components of that subgraph. When each node finishes recursing, if its lowlink is still set to its index, then it is the root node of a strongly connected component, formed by all of the nodes above it on the stack. The algorithm pops the stack up to and including the current node, and presents all of these nodes as a strongly connected component. Note that v.lowlink := min(v.lowlink, w.index) is the correct way to update v.lowlink if w is on stack. Because w is on the stack already, (v, w) is a back-edge in the DFS tree and therefore w is not in the subtree of v. Because v.lowlink takes into account nodes reachable only through the nodes in the subtree of v we must stop at w and use w.index instead of w.lowlink.
+--------------------------------------------------------------------------------
+9) __plot_graph(self) -> None -__ This function draws the graph with matplotlib lib.
+    
+
+### Output of image of scenario five(A5):
+
+![](https://github.com/georgekouzi/DirectedWeightedGraph_onPython/blob/main/image/%E2%80%8F%E2%80%8F2.PNG?raw=true)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## More explanation for how the game work : 
 https://github.com/georgekouzi/pokemon_Game/wiki/pokemon-game
 
