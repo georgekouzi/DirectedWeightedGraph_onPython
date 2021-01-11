@@ -10,24 +10,39 @@ import matplotlib.pyplot as print_graph
 import random
 import math
 from src.Node import Node
-
+"""
+ This class knows how to do operations on graphs.
+ We can check scc on  the graph and know if it Strongly Connected, check the cheap path between two nodes and the cheap distance between two nodes.
+ We can save the graph on json file and load the graph from json file.
+ This class uses a DFS algorithm that allows running on all nodes in the graph and do transpoz to the graph edge in run time O(n+m).
+ This class uses a Dijkstra algorithm that allows running on all nodes in the graph and find the cheap path two nodes in run time O(E*log(V)).
+ https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm.
+ https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm.
+ @author George kouzy and Dolev Saadia. 
+"""
 class GraphAlgo(GraphAlgoInterface):
 
     def __init__(self, graph=DiGraph()):
 
         self.__DWGraph = graph
-
+    """
+    This function return your graph.
+    @reterns this graph.
+    """
     def get_graph(self) -> GraphInterface:
-        """
-        :return: the directed graph on which the algorithm works on.
-        """
+
         return self.__DWGraph
 
     """
-           Loads a graph from a json file.
-           @param file_name: The path to the json file
-           @returns True if the loading was successful, False o.w.
-           """
+    Load this json file (directed weighted graph). This function path of json file name on the computer. 
+    The default path to this file is in the project folder. 
+    we use json lib- Which allows us to extract the information from the json file that we need and read it 
+    and create a new graph . and its data can be used to recreate the object in memory. The information we want to 
+    load is: a dictionary of list of all edges and list of all nodes. the run time is: O(E*V)- E - edges and V-nodes. 
+    we use json folder to get json file load.           
+    @param file_name: The path to the json file
+    @returns True if the loading was successful, False o.w.
+    """
 
     def load_from_json(self, file_name: str) -> bool:
 
@@ -55,12 +70,18 @@ class GraphAlgo(GraphAlgoInterface):
         except FileExistsError:
             return False
 
+    """
+    Saves this directed weighted graph to this json file name(file_name:str).
+    This function path of json file name on the computer.
+    The default path to this file is in the project folder(src).
+    we use json lib- Which allows us to extract the information we need and write it into the json file. T
+    he information we want to keep is: dictionary of list of all the edges and list of all the nodes.
+    @param file_name: The path to the out file
+    @return: True if the save was successful, False o.w.
+    """
+
     def save_to_json(self, file_name: str) -> bool:
-        """
-        Saves the graph in JSON format to a file
-        @param file_name: The path to the out file
-        @return: True if the save was successful, False o.w.
-        """
+
         try:
             with open(file_name, "w") as ToJsonFile:
                 all_node = self.__DWGraph.get_all_v()
@@ -87,29 +108,21 @@ class GraphAlgo(GraphAlgoInterface):
         except FileExistsError:
             return False
 
+
+
+
+    """
+    This function returns tuple of the length of the shortest path between src to dest and the shortest pat list between src to dest - as an ordered List of nodes: source--> n1-->n2-->...destination. 
+    In order to find the shortest path from source node to destination node we will use the algorithm of dijkstra.. if src==dest we return (inf, [id1])
+    or if no path between the node -->  we return (inf, None).
+    @param id1: The start node id
+    @param id2: The end node id
+    @return: The distance of the path, the path as a list
+    """
+
+
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        """
-        Returns the shortest path from node id1 to node id2 using Dijkstra's Algorithm
-        @param id1: The start node id
-        @param id2: The end node id
-        @return: The distance of the path, the path as a list
 
-        Example:
-#      >>> from GraphAlgo import GraphAlgo
-#       >>> g_algo = GraphAlgo()
-#        >>> g_algo.addNode(0)
-#        >>> g_algo.addNode(1)
-#        >>> g_algo.addNode(2)
-#        >>> g_algo.addEdge(0,1,1)
-#        >>> g_algo.addEdge(1,2,4)
-#        >>> g_algo.shortestPath(0,1)
-#        (1, [0, 1])
-#        >>> g_algo.shortestPath(0,2)
-#        (5, [0, 1, 2])
-
-        More info:
-        https://en.wikipedia.org/wiki/Dijkstra's_algorithm
-        """
 
         if id1 not in self.__DWGraph.get_all_v() or id2 not in self.__DWGraph.get_all_v():
             return None, None
@@ -134,8 +147,20 @@ class GraphAlgo(GraphAlgoInterface):
         myPath.reverse()
 
         return myDict.get(id2).get("dist"), myPath
+    """
+         This algorithm makes it possible to go over a weighted directed graph And find the cheapest ways from the 
+         source node to the rest of the graph nodes. 
+         The weights in the graph symbolize distance. 
+         The shortest route between two points means the route with the lowest amount of weights between the two vertices. 
+         we use inner class that call nodeAlgo to save all the data that dijkstra algorithm need. 
+         Ran time- O(E*log(V)) because we create PriorityQueue and compare the node by the minimum distance .
+         @returns - dictionary of all the node with information about the chipsets paths from the source node 
+         to all the node in the graph  
+         for More info:
+         https://en.wikipedia.org/wiki/Dijkstra's_algorithm
+    """
 
-    def __dijkstra(self, id_src):
+    def __dijkstra(self, id_src)->dict:
         pQueue = PriorityQueue()
         node_data = {id_src: {"dist": 0.0, "vis": False, "parents": -1}}
         pQueue.put((node_data.get(id_src).get("dist"), id_src))
@@ -159,13 +184,16 @@ class GraphAlgo(GraphAlgoInterface):
                     node_data.get(n).update({"vis": True})
 
         return node_data
-
+    """
+    This function checks if there is a Circular  Path from node id1 node to all the nodes With Dfs Algorithm- 
+    this is an improved DFS called Tarjan Algorithm. after use DFS Algorithm we get list of list of all the phath in this component. 
+    Tarjan_Algo dictionary - serves data Structure: stack ,lowlink ,count and st_trace. 
+    run time O(E + V): E- the number of ribs, V- the number of nodes.
+    @param id1: The node id
+    @return: The list of nodes in the SCC
+    """
     def connected_component(self, id1: int) -> list:
-        """
-        Finds the Strongly Connected Component(SCC) that node id1 is a part of.
-        @param id1: The node id
-        @return: The list of nodes in the SCC
-        """
+
         if self.__DWGraph.get_all_v() is None or id1 not in self.__DWGraph.get_all_v():
             return []
 
@@ -187,12 +215,18 @@ class GraphAlgo(GraphAlgoInterface):
                     break
 
         return ConnectedNodes
+    """
+    This function checks if there is a Path from each node to all the nodes With Dfs Algorithm- 
+    this is an improved DFS called Tarjan Algorithm. 
+    after use DFS Algorithm we get list of list of all the phath in this component  if the size of the list  
+    equal to 1 So the graph is strongly connected and can be reached from any node to any other node. 
+    Tarjan_Algo dictionary - serves data Structure: stack ,lowlink ,count and st_trace. 
+    run time O(E + V): E- the number of ribs, V- the number of nodes.
+    @return: The list all SCC
+    """
 
     def connected_components(self) -> List[list]:
-        """
-        Finds all the Strongly Connected Component(SCC) in the graph.
-        @return: The list all SCC
-        """
+
         if self.__DWGraph.get_all_v() is None:
             return []
 
@@ -209,22 +243,17 @@ class GraphAlgo(GraphAlgoInterface):
             component = tarjan_dict.get("component")
 
         return component
-
+    """
+    This function draws the graph with matplotlib lib.
+    """
     def plot_graph(self) -> None:
 
         nodes = self.__DWGraph.get_all_v()
-        # print(len(nodes))
-        # random_pos={"x":{},"y":{}}
-        b = random.uniform(0, len(nodes))
 
-        # print(b)
         for key in nodes:
 
             if nodes[key].get_pos() is None:
                 x_pos = random.uniform(0, len(nodes))
-                # if int(x_pos) in  random_pos:
-                #     random_pos.get("x").update({})
-
                 y_pos = random.uniform(0, len(nodes))
                 nodes[key].set_pos( (x_pos, y_pos, 0.0))
 
@@ -242,6 +271,7 @@ class GraphAlgo(GraphAlgoInterface):
                 for neighbor in edge:
 
                     if nodes[neighbor].get_pos() is None:
+
                         x_neighbor_pos = random.uniform(0, len(nodes))
                         y_neighbor_pos = random.uniform(0, len(nodes))
                         nodes[neighbor].set_pos ((x_neighbor_pos, y_neighbor_pos, 0.0))
@@ -252,6 +282,7 @@ class GraphAlgo(GraphAlgoInterface):
 
                     print_graph.plot([x_pos, x_neighbor_pos], [y_pos, y_neighbor_pos], zorder=0, color='k')
 
+                    # find all the point on this line
                     u = np.diff([x_pos, x_neighbor_pos])
                     v = np.diff([y_pos, y_neighbor_pos])
                     arrow_x = x_pos + u * 0.8
@@ -260,8 +291,27 @@ class GraphAlgo(GraphAlgoInterface):
                                        headlength=4, color='k', )
 
         print_graph.show()
+        return None
+    """
+     his algorithm makes it possible to go over a weighted directed graph the node stack, 
+     which starts out empty and stores the history of nodes explored but not yet committed to a strongly connected component.
+     as nodes are not popped as the search returns up the tree; 
+     they are only popped when an entire strongly connected component has been found. 
+     The outermost loop searches each node that has not yet been visited, ensuring that nodes which are not reachable 
+     from the first node are still eventually traversed. 
+     finding all successors from the node v, and reporting all strongly connected components of that subgraph. 
+     When each node finishes recursing, if its lowlink is still set to its index, 
+     then it is the root node of a strongly connected component, formed by all of the nodes above it on the stack. 
+     The algorithm pops the stack up to and including the current node, and presents all of these nodes as a strongly connected component. 
+     Note that v.lowlink := min(v.lowlink, w.index) is the correct way to update v.lowlink if w is on stack. 
+     Because w is on the stack already, (v, w) is a back-edge in the DFS tree and therefore w is not in the subtree of v. 
+     Because v.lowlink takes into account nodes reachable only through the nodes in the subtree of v we must stop at w 
+     and use w.index instead of w.lowlink.
+     @returns - dictionary of all scc 
 
-    def __dfs(self, n, tarjan_dict):
+    """
+
+    def __dfs(self, n, tarjan_dict)->dict:
 
         parent = {}
         parent.update({n: n})
