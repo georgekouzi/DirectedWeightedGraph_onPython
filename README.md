@@ -22,11 +22,12 @@ in this project We present a class of directed weighted graph in the Peyton lang
 in addition you can findnode class that produces the nodes in the graph.
 
 -------------------------------------------------------------------------------------
+ 
 
+## class DiGraph:
+This class creates an directed weighted graph. In order to create this graph we used two Node classes that we wrote.
 
-#### first we explain how actually we create graph and how different information about the graph can be obtained using the algorithms shortestPath,connected_components,connected_component. 
-
-## The functions in the DiGraph class and the description about them :
+### The functions in the DiGraph class and the description about them :
 
 1) __v_size(self) -> int -__ This function returns the amount of the nodes that exist in the graph.
 --------------------------------------------------------------------------
@@ -54,8 +55,10 @@ If this node does not exist the function will return false.
 ----------------------------------------------------------------
 10) __remove_edge(self, node_id1: int, node_id2: int) -> bool -__ -This function gets two keys, a source node_id1 and a destination node_id2, the function checks if this edge exists and deletes this edge and returns true. If the edge does not exist the function returns false.
 
+## class GraphAlgo:
+This class allows you to do operations on a graph that require different algorithms.
 
-## The functions in the GraphAlgo class and the description about them :
+### The functions in the GraphAlgo class and the description about them :
 
 1) __get_graph(self) -> GraphInterface -__  This function return your graph.
 ---------------------
