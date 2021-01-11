@@ -4,7 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-def load_networkx_from_json(file_name: str) -> bool:
+def load_networkx_from_json(file_name: str) :
     try:
 
         with open(file_name, 'r') as JsonFile:
@@ -18,17 +18,15 @@ def load_networkx_from_json(file_name: str) -> bool:
 
                     if "pos" in node:
                         pos = node.get("pos").split(",")
-                        newGraph.add_node(node["id"],pos= (float(pos[0]),float(pos[1])))
+                        newGraph.add_node(node["id"], pos=(float(pos[0]), float(pos[1])))
                     else:
                         newGraph.add_node(node.get("id"))
-
 
             if "Edges" in DataGraph:
                 if DataGraph["Edges"] is not None:
 
                     for edge in DataGraph.get("Edges"):
                         newGraph.add_edge(edge.get("src"), edge.get("dest"), weight=edge.get("w"))
-
 
         return newGraph
 
@@ -39,39 +37,38 @@ def load_networkx_from_json(file_name: str) -> bool:
 # def save_to_json(self, file_name: str) -> bool:
 
 
-def run_time(file_name:str,src:int,dest:int):
+def run_time(file_name: str, src: int, dest: int):
     dt = 0
     for i in range(100):
         start = timeit.default_timer()
         graph_networkx = load_networkx_from_json(file_name)
         stop = timeit.default_timer()
-        dt = dt+(stop-start)
+        dt = dt + (stop - start)
 
-    print("Graph: |V|=",graph_networkx.number_of_nodes(), " , |E|=",graph_networkx.number_of_edges())
-    print("run time of read from json file and build the graph: ", dt/100)
+    print("Graph: |V|=", graph_networkx.number_of_nodes(), " , |E|=", graph_networkx.number_of_edges())
+    print("run time of read from json file and build the graph: ", dt / 100)
 
     dt = 0
     for i in range(100):
         start = timeit.default_timer()
-        connected_components=[]
+        connected_components = []
         for c in nx.strongly_connected_components(graph_networkx):
             connected_components.append(c)
         stop = timeit.default_timer()
 
         dt = dt + (stop - start)
 
-    print("run time of connected_component: ", dt/100)
+    print("run time of connected_component: ", dt / 100)
 
     dt = 0
     for i in range(100):
         start = timeit.default_timer()
-        short = nx.dijkstra_path(graph_networkx,src,dest,weight='weight')
+        short = nx.dijkstra_path(graph_networkx, src, dest, weight='weight')
         # print((short))
         stop = timeit.default_timer()
         dt = dt + (stop - start)
 
-
-    print("run time of shortest_path: ", dt/100)
+    print("run time of shortest_path: ", dt / 100)
 
     # dt = 0
     # for i in range(100):
@@ -92,10 +89,8 @@ def run_time(file_name:str,src:int,dest:int):
     print()
 
 
-
 if __name__ == '__main__':
-
-    run_time('../data/G_10_80_1.json',0,9)
+    run_time('../data/G_10_80_1.json', 0, 9)
     run_time('../data/G_100_800_1.json', 0, 99)
     run_time('../data/G_1000_8000_1.json', 0, 999)
     run_time('../data/G_10000_80000_1.json', 0, 9999)
