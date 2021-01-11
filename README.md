@@ -4,6 +4,10 @@
 
 ### my code in Peyton language VS my code in Java language VS networkx library .
 For results and for to see the tables comparisons, click on this link:
+https://github.com/georgekouzi/DirectedWeightedGraph_onPython/wiki/comparisons
+
+To see my computer specifications click on the following link:
+https://github.com/georgekouzi/DirectedWeightedGraph_onPython/wiki/my-computer-specifications
 
 ----
 This project comes to compare code that written in Java to code that written in Peyton (current code)
@@ -66,10 +70,10 @@ the run time is: O(E*V)- E - edges and V-nodes. if the save succdicessfully the 
 4) __shortest_path(self, id1: int, id2: int) -> (float, list) -___ returns tuple of the length of the shortest path between src to dest and the shortest pat list between src to dest - as an ordered List of nodes: source--> n1-->n2-->...destination. 
 In order to find the shortest path from source node to destination node we will use the algorithm of dijkstra.. if src==dest we return (inf, [id1])
 or if no path between the node -->  we return (inf, None).
+
 ----------------------------------------
 5) ___dijkstra(self, id_src) ->dict -__ This algorithm makes it possible to go over a weighted directed graph And find the cheapest ways from the source node to the rest of the graph nodes. The weights in the graph symbolize distance. The shortest route between two points means the route with the lowest amount of weights between the two vertices. we use inner class that call nodeAlgo to save all the data that dijkstra algorithm need. Ran time- O(E*log(V)) because we create PriorityQueue and compare the node by the minimum distareturns - 
 the function return a dictionary of all the node with information about the chipsets paths from the source node  to all the node in the graph.
- 
 ................................................
 6) __connected_component(self, id1: int) -> list -__ This function checks if there is a Circular  Path from node id1 node to all the nodes With Dfs Algorithm- this is an improved DFS called Tarjan Algorithm. after use DFS Algorithm we get list of list of all the phath in this component. Tarjan_Algo dictionary - serves data Structure: stack ,lowlink ,count and st_trace. 
 run time O(E + V): E- the number of ribs, V- the number of nodes.
