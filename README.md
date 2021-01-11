@@ -22,7 +22,10 @@ in this project We present a class of directed weighted graph in the Peyton lang
 in addition you can findnode class that produces the nodes in the graph.
 
 -------------------------------------------------------------------------------------
- 
+## In order for this project to work, a 3 library must be installed:
+1) numpy library in version 1.19.3
+2) matplotlib library in version 3.3.3
+3) Networkx library in version 2.5
 
 ## class DiGraph:
 This class creates an directed weighted graph. In order to create this graph we used two Node classes that we wrote.
