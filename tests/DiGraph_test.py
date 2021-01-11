@@ -100,6 +100,27 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual(graph.e_size(), 0)
         self.assertEqual(graph.get_mc(), 15)
 
+    def test_remove_node(self):
+        graph = DiGraph()
+        self.assertTrue(graph.add_node(0,(22.22,31.53,0.0)))
+        self.assertTrue(graph.add_node(1),(22.22,31.53,0.0))
+        graph1 = DiGraph()
+        self.assertTrue(graph1.add_node(0, (22.22, 31.53, 0.0)))
+        self.assertTrue(graph1.add_node(1), (22.22, 31.53, 0.0))
+
+        self.assertEqual(graph.get_all_v(),graph1.get_all_v())
+        graph.add_edge(0,1,0)
+        self.assertNotEqual(graph.get_all_v(),graph1.get_all_v())
+        graph1.add_edge(0,1,0)
+        self.assertEqual(graph.get_all_v(),graph1.get_all_v())
+        self.assertEqual(graph,graph1)
+        graph1.add_edge(1,0,0.9)
+        self.assertNotEqual(graph1,graph)
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
