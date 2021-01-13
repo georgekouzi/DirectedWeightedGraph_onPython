@@ -125,14 +125,14 @@ class GraphAlgo(GraphAlgoInterface):
 
 
         if id1 not in self.__DWGraph.get_all_v() or id2 not in self.__DWGraph.get_all_v():
-            return None, None
+            return None, []
 
         if id1 == id2:
             return 0, [id1]
 
         myDict = self.__dijkstra(id1)
         if id2 not in myDict:
-            return math.inf, None
+            return math.inf, []
 
         parents = myDict.get(id2).get("parents")
         if parents == -1:
